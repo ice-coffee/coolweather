@@ -24,19 +24,29 @@ public class HttpUtil
                 {
                     URL url = new URL(address);
 
+                    /* 初始化网络连接 */
                     connection = (HttpURLConnection) url.openConnection();
-
                     connection.setRequestMethod("GET");
-
                     connection.setConnectTimeout(8000);
-
                     connection.setReadTimeout(8000);
 
+                    /* 进行网络请求,获取数据 */
                     InputStream in = connection.getInputStream();
-
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-//                    StringBuffer
+                    /* 读取获取并调用回调接口返回请求结果 */
+                    StringBuffer reponse = new StringBuffer();
+                    String line;
+
+                    while ((line = reader.readLine()) != null)
+                    {
+                        reponse.append(line);
+                    }
+
+                    if (null != listener)
+                    {
+                        listener.onFinish(reponse.toString());
+                    }
                 }catch (Exception e)
                 {
                     if (null != listener)
